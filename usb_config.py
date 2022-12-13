@@ -3,7 +3,7 @@ USB_VID_PID={
         "VID":"1155",
         "PID":"14155",
     },
-    "BARCODE_SCANNER":{     #2D Barcode Scanner Module MODEL: LV9500
+    "SCANNER":{     #2D Barcode Scanner Module MODEL: LV9500
         "VID":"59473",
         "PID":"8450",
     },
@@ -18,4 +18,9 @@ USB_BAUD_RATES={
     "STM32":{               #NUCLEO-G070RB
         "BAUD_RATE":"115200",
     },
+    "SCANNER":{
+        "BAUD_RATE":"9600",
+    },
 }
+
+NUMBER_OF_SCANNERS = 6
