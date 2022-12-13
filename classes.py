@@ -1,5 +1,7 @@
 import _thread
 import usb_config
+import communication_functions as cf
+import time
 
 class machine():
 
@@ -14,11 +16,18 @@ class machine():
 class communication():
     def __init__(self,machine_class):
         self.machine = machine_class
+ 
+        self.STM32_STATUS = False           #True - Connected, False - Disconnected
+        self.PRINTER_STATUS = False         #True - Connected, False - Disconnected
+        self.SCANNERS_STATUS = False        #True - Connected, False - Disconnected
 
-        
-        self.STM32_STATUS = False             #True - STM32 connected, False - STM32 not connected
-        self.PRINTER_STATUS = False           #True - Printer connected, False - Printer not connected
-        self.SCANNERS_STATUS = False          #True - Scanners connected, False - Scanners not connected
-        
-        
 
+        _thread.start_new_thread(cf.check_connected_devices_worker,(self,))
+
+        # if self.STM32_STATUS and self.PRINTER_STATUS and self.SCANNERS_STATUS:
+            # print("Communication class: All devices connected, starting reading and writing threads...")
+        _thread.start_new_thread(cf.STM32_communication_buffor,(self,))
+kom=communication(machine())
+while True:
+    
+    continue

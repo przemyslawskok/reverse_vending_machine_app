@@ -12,3 +12,10 @@ USB_VID_PID={
         "PID":"8963",
     },
 }
+
+
+USB_BAUD_RATES={
+    "STM32":{               #NUCLEO-G070RB
+        "BAUD_RATE":"115200",
+    },
+}
