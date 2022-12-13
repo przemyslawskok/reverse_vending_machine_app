@@ -13,7 +13,7 @@ class machine():
         self.PRINTER_SPOOL = 0              #Integer - Number of % of spool left
         self.BIN_FILLING_LEVEL = 0          #Integer - Number of % of bin filling level
 
-class communication():
+class communication():a
     def __init__(self,machine_class):
         self.machine = machine_class
  
