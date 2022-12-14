@@ -33,17 +33,45 @@ def scanners_communication_buffor(communication_class):
     scanners_com_ports=check_scanners_com_ports()
     if scanners_com_ports:
         for com_port in scanners_com_ports:
-            _thread.start_new_thread(read_scanner_data,(com_port,))
+            _thread.start_new_thread(read_scanner_data,(com_port,communication_class))
 
             
 
-def read_scanner_data(com_port):
+def read_scanner_data(com_port, communication_class):
     try:
         serial_port=serial.Serial(com_port,config.USB_BAUD_RATES["SCANNER"]["BAUD_RATE"])
         print(c.OK_GREEN+"Communication class: Scanner connected on port: "+com_port+c.ENDC)
     except:
         print(c.ERROR+"Communication class: Error while connecting to scanner on port: "+str(com_port)+c.ENDC)
         print(c.ERROR+"Communication class: Aborting read_scanner_data() with port: "+str(com_port)+c.ENDC)
+        return
+    while True:
+        if serial_port.in_waiting > 0:
+            try:
+                barcode = serial_port.readline().decode("utf-8").strip()
+                #Check if barcode is 11 characters long
+                if len(barcode) == 13:
+                    communication_class.BARCODES.append(barcode)
+                    communication_class.BARCODES_TIMER=20
+                    print("Communication class: Barcode scanned on port: "+com_port+" with value: "+str(barcode))
+                else:
+                    print(c.WARNING+"Communication class: Invalid barcode scanned on port: "+com_port+" with value: "+str(barcode)+c.ENDC)
+            except:
+                print(c.WARNING+"Communication class: Can't decode data from scanner on port: "+str(com_port)+c.ENDC)
+
+
+def barcodes_timer_worker(communication_class):
+    print(c.OK_GREEN+"Communication class: Barcodes timer worker started!"+c.ENDC)
+    while True:
+        if communication_class.BARCODES_TIMER>0:
+            communication_class.BARCODES_TIMER-=1
+            time.sleep(0.1)
+        elif communication_class.BARCODES_TIMER==0:
+
+            communication_class.BARCODES_TIMER= -1
+            communication_class.BARCODES=[]
+            print("Communication class: Barcodes timer expired!")
+
 
 
 def check_scanners_com_ports():
@@ -94,9 +122,9 @@ def check_connected_devices_worker(communication_class):
         else:
             communication_class.SCANNERS_STATUS = False
 
-        if communication_class.STM32_STATUS == False or communication_class.PRINTER_STATUS == False or communication_class.SCANNERS_STATUS == False:
+        # if communication_class.STM32_STATUS == False or communication_class.PRINTER_STATUS == False or communication_class.SCANNERS_STATUS == False:
             
-            print(c.WARNING+"Communication class: No all devices connected!"+c.ENDC)
+        #     print(c.WARNING+"Communication class: No all devices connected!"+c.ENDC)
         time.sleep(1)
         
 

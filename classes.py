@@ -3,6 +3,8 @@ import usb_config
 import communication_functions as cf
 import time
 from syntax import colors as c
+
+
 class machine():
 
     def __init__(self):
@@ -30,18 +32,22 @@ class communication():
         self.PRINTER_STATUS = False         #True - Connected, False - Disconnected
         self.SCANNERS_STATUS = False        #True - Connected, False - Disconnected
 
+        self.BARCODES = []                  #List of scanned barcodes
+        self.BARCODES_TIMER = -1            #Timer for clearing barcodes list
+
 
         _thread.start_new_thread(cf.check_connected_devices_worker,(self,))
-
-        while not (self.STM32_STATUS and self.PRINTER_STATUS and self.SCANNERS_STATUS):
-            print(c.WARNING+"Communication class: Waiting for devices to connect..."+c.ENDC)
-            time.sleep(1)
+       
+        # while not (self.STM32_STATUS and self.PRINTER_STATUS and self.SCANNERS_STATUS):
+            # print(c.WARNING+"Communication class: Waiting for devices to connect..."+c.ENDC)
+            # time.sleep(1)
         print("Communication class: All devices connected, starting reading and writing threads...")
 
 
 
         _thread.start_new_thread(cf.STM32_communication_buffor,(self,))
         _thread.start_new_thread(cf.scanners_communication_buffor,(self,))
+        _thread.start_new_thread(cf.barcodes_timer_worker,(self,))
 
 
 
@@ -49,5 +55,4 @@ class communication():
 
 kom=communication(machine())
 while True:
-    
     continue
