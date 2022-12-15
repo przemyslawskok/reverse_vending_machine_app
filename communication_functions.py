@@ -18,14 +18,38 @@ def STM32_communication_buffor(communication_class):
         return
 
     print(c.OK_GREEN+"Communication class: STM32 connection estabilished!"+c.ENDC)
+
+    # serial_port.write(b"B\n")
     while True:
-        #serial_port.write(b"A\n")
         #READ DATA FROM STM32
-        if serial_port.in_waiting > 0:
-            command = serial_port.readline()
-            print(command)
+        
+       
         #WRITE DATA TO STM32
         # ify..
+
+        if communication_class.ASK_SENSOR_IN_HOLE:
+            print(c.OK_BLUE+"Communication class: Asking STM32 if sensor in hole..."+c.ENDC)
+            serial_port.write(b"F\n")
+            communication_class.ASK_SENSOR_IN_HOLE = False
+        elif communication_class.TURN_ON_CONVEYOR_BELT_FORWARD:
+            print(c.OK_BLUE+"Communication class: Asking STM32 if sensor in hole..."+c.ENDC)
+            serial_port.write(b"A\n")
+            communication_class.TURN_ON_CONVEYOR_BELT_FORWARD = False
+        elif communication_class.TURN_ON_CONVEYOR_BELT_BACKWARD:
+            print(c.OK_BLUE+"Communication class: Asking STM32 if sensor in hole..."+c.ENDC)
+            serial_port.write(b"B\n")
+            communication_class.TURN_ON_CONVEYOR_BELT_BACKWARD = False
+        elif communication_class.TURN_OFF_CONVEYOR_BELT:
+            print(c.OK_BLUE+"Communication class: Asking STM32 if sensor in hole..."+c.ENDC)
+            serial_port.write(b"C\n")
+            communication_class.TURN_OFF_CONVEYOR_BELT = False
+
+        if serial_port.in_waiting > 0:
+                    command = serial_port.readline()
+                    print(command)
+                
+        
+        
 
 def scanners_communication_buffor(communication_class):
     print("Communication class: Establishing connection with scanners...")
