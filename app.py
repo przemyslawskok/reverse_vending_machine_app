@@ -1,16 +1,34 @@
 import classes
 import time
-
+import syntax as s
 machine=classes.machine()
 communication=classes.communication(machine)
 
 while True:
     if machine.STATE_IDLE:
-        if len(communication.BARCODES) > 0:
+        if len(communication.BARCODES) > 0 or machine.RING_SENSOR:
             communication.turn_on_conveyor_belt_backward()
-            
-            time.sleep(1.2)
+            time.sleep(1)
+            #spytaj o wage
+            communication.get_weight()
+            time.sleep(0.1)
+            print(communication.WEIGHT_VALUE)
+            if communication.WEIGHT_VALUE > 970000:
+                print(s.colors.OK_CYAN+"Main loop: Weight value is too high, giving out bottle"+s.colors.ENDC)
+                communication.turn_on_conveyor_belt_forward()
+                time.sleep(2)
+            elif communication.WEIGHT_VALUE < 970000 and communication.WEIGHT_VALUE > 940000:
+          
+
+                print(s.colors.OK_CYAN+"Main loop: Weight value is OK, taking bottle"+s.colors.ENDC)
+                communication.turn_on_conveyor_belt_backward()
+                time.sleep(1.5)
+            else:
+                communication.turn_off_conveyor_belt()
+                
+
+            print(s.colors.OK_CYAN+"Main loop: Turning off conveyor belt"+s.colors.ENDC)
             communication.turn_off_conveyor_belt()
-        #Check if someone put bottle in hole
-        # communication.check_sensor_in_hole()
-        # time.sleep(0.1)
+            communication.BARCODES = []
+            time.sleep(3)
+        

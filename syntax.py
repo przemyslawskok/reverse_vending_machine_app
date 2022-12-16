@@ -1,6 +1,8 @@
 class colors:
     OK_BLUE = '\033[94m'
     OK_GREEN = '\033[92m'
+    OK_MAGENTA = '\033[35m'
+    OK_CYAN = '\033[36;1m'
     WARNING = '\033[93m'
     ERROR = '\033[91m'
     ENDC = '\033[0m'

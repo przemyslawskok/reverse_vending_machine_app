@@ -27,26 +27,61 @@ def STM32_communication_buffor(communication_class):
         #WRITE DATA TO STM32
         # ify..
 
-        if communication_class.ASK_SENSOR_IN_HOLE:
-            print(c.OK_BLUE+"Communication class: Asking STM32 if sensor in hole..."+c.ENDC)
-            serial_port.write(b"F\n")
-            communication_class.ASK_SENSOR_IN_HOLE = False
-        elif communication_class.TURN_ON_CONVEYOR_BELT_FORWARD:
-            print(c.OK_BLUE+"Communication class: Asking STM32 if sensor in hole..."+c.ENDC)
-            serial_port.write(b"A\n")
+        
+        if communication_class.TURN_ON_CONVEYOR_BELT_FORWARD:
             communication_class.TURN_ON_CONVEYOR_BELT_FORWARD = False
+            print(c.OK_BLUE+"Communication class: Sending STM32 command to turn on conveyor belt forward"+c.ENDC)
+            serial_port.write(b"A\n")
+            
         elif communication_class.TURN_ON_CONVEYOR_BELT_BACKWARD:
-            print(c.OK_BLUE+"Communication class: Asking STM32 if sensor in hole..."+c.ENDC)
-            serial_port.write(b"B\n")
             communication_class.TURN_ON_CONVEYOR_BELT_BACKWARD = False
+            print(c.OK_BLUE+"Communication class: Sending STM32 command to turn on conveyor belt backward"+c.ENDC)
+            serial_port.write(b"B\n")
+            
         elif communication_class.TURN_OFF_CONVEYOR_BELT:
-            print(c.OK_BLUE+"Communication class: Asking STM32 if sensor in hole..."+c.ENDC)
-            serial_port.write(b"C\n")
             communication_class.TURN_OFF_CONVEYOR_BELT = False
+            print(c.OK_BLUE+"Communication class: Sending STM32 command to turn off conveyor belt"+c.ENDC)
+            serial_port.write(b"C\n")
+        
+        elif communication_class.GET_WEIGHT:
+            communication_class.GET_WEIGHT = False
+            print(c.OK_BLUE+"Communication class: Sending STM32 command to get weight"+c.ENDC)
+            serial_port.write(b"E\n")
 
         if serial_port.in_waiting > 0:
-                    command = serial_port.readline()
-                    print(command)
+            command = serial_port.read(9).decode("utf-8")
+            
+            #check type of command by first character
+            if command[0] == "f":
+                #get sensor state
+                state = command[1]
+                if state == "1":
+                    communication_class.machine.RING_SENSOR = True
+                    print(c.OK_MAGENTA+"Communication class: Ring sensor state received from STM32: Object detected"+c.ENDC)
+                    continue
+                elif state == "0":
+                    communication_class.machine.RING_SENSOR = False
+                    print(c.OK_MAGENTA+"Communication class: Ring sensor state received from STM32: No object"+c.ENDC)
+                    continue
+
+            elif command[0] == "e":
+                #get weight value by ending on "e" character
+                value = "" 
+                for character in command[1:]:
+                    if character == "e":
+                        break
+                    elif character == "*":
+                        continue
+                    else:
+                        value += character
+                communication_class.WEIGHT_VALUE = int(value)
+                print(c.OK_MAGENTA+"Communication class: Weight value received from STM32: "+value+c.ENDC)
+                
+                
+                continue
+                
+                
+
                 
         
         
@@ -72,9 +107,15 @@ def read_scanner_data(com_port, communication_class):
     while True:
         if serial_port.in_waiting > 0:
             try:
-                barcode = serial_port.readline().decode("utf-8").strip()
-                #Check if barcode is 11 characters long
-                if len(barcode) == 13:
+                # barcode = serial_port.readline().decode("utf-8").strip()
+                barcode = serial_port.read(15)
+           
+
+                #Delete last two characters from barcode and convert it from bytes to string
+                barcode=barcode.decode("utf-8").strip()
+
+                #Check if 13 characters from barcode are digits
+                if barcode.isdigit() and len(barcode)==13:
                     communication_class.BARCODES.append(barcode)
                     communication_class.BARCODES_TIMER=20
                     print("Communication class: Barcode scanned on port: "+com_port+" with value: "+str(barcode))

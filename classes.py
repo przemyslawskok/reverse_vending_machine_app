@@ -46,13 +46,17 @@ class communication():
         self.BARCODES = []                  #List of scanned barcodes
         self.BARCODES_TIMER = -1            #Timer for clearing barcodes list
 
+        self.WEIGHT_VALUE = 0               #Integer - Weight value 
 
 
-        self.ASK_SENSOR_IN_HOLE = False
+        
         self.TURN_ON_CONVEYOR_BELT_FORWARD = False
         self.TURN_ON_CONVEYOR_BELT_BACKWARD = False
         self.TURN_OFF_CONVEYOR_BELT = False
-
+        
+        self.GET_WEIGHT = False
+        
+        
         _thread.start_new_thread(cf.check_connected_devices_worker,(self,))
        
         # while not (self.STM32_STATUS and self.PRINTER_STATUS and self.SCANNERS_STATUS):
@@ -70,11 +74,11 @@ class communication():
 
         print(c.OK_GREEN+"Communication class: Initialized!"+c.ENDC)
     
-    def check_sensor_in_hole(self):
-        self.ASK_SENSOR_IN_HOLE = True
     def turn_on_conveyor_belt_forward(self):
         self.TURN_ON_CONVEYOR_BELT_FORWARD = True
     def turn_on_conveyor_belt_backward(self):
         self.TURN_ON_CONVEYOR_BELT_BACKWARD = True
     def turn_off_conveyor_belt(self):
         self.TURN_OFF_CONVEYOR_BELT = True
+    def get_weight(self):
+        self.GET_WEIGHT = True
