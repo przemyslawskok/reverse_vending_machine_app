@@ -10,22 +10,17 @@ while True:
             communication.turn_on_conveyor_belt_backward()
             time.sleep(1)
             #spytaj o wage
+            
             communication.get_weight()
-            time.sleep(0.1)
-            print(communication.WEIGHT_VALUE)
-            if communication.WEIGHT_VALUE > 970000:
+            time.sleep(0.05)
+            if communication.WEIGHT_VALUE > 1000000:
                 print(s.colors.OK_CYAN+"Main loop: Weight value is too high, giving out bottle"+s.colors.ENDC)
                 communication.turn_on_conveyor_belt_forward()
-                time.sleep(2)
-            elif communication.WEIGHT_VALUE < 970000 and communication.WEIGHT_VALUE > 940000:
-          
-
+                time.sleep(1.5)
+            else:
                 print(s.colors.OK_CYAN+"Main loop: Weight value is OK, taking bottle"+s.colors.ENDC)
                 communication.turn_on_conveyor_belt_backward()
                 time.sleep(1.5)
-            else:
-                communication.turn_off_conveyor_belt()
-                
 
             print(s.colors.OK_CYAN+"Main loop: Turning off conveyor belt"+s.colors.ENDC)
             communication.turn_off_conveyor_belt()
