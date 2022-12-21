@@ -2,7 +2,7 @@
 import serial
 
 
-p=serial.Serial(port = "COM24", baudrate=115200,
+p=serial.Serial(port = "COM57", baudrate=115200,
                                 bytesize=8, timeout=1, stopbits=serial.STOPBITS_ONE)
 
 # p.write(b'\x1B\x61\x01')   center

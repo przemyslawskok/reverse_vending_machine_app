@@ -79,6 +79,19 @@ def STM32_communication_buffor(communication_class):
                 
                 
                 continue
+
+            if command[0] == "g":
+                #get sensor state
+                state = command[1]
+                if state == "1":
+                    communication_class.machine.BOTTLE_END_SENSOR = True
+                    print(c.OK_MAGENTA+"Communication class: Bottle end sensor state received from STM32: Object detected"+c.ENDC)
+                    continue
+                elif state == "0":
+                    communication_class.machine.BOTTLE_END_SENSOR = False
+                    print(c.OK_MAGENTA+"Communication class: Bottle end sensor state received from STM32: No object"+c.ENDC)
+                    continue
+
                 
                 
 
@@ -93,6 +106,8 @@ def scanners_communication_buffor(communication_class):
     if scanners_com_ports:
         for com_port in scanners_com_ports:
             _thread.start_new_thread(read_scanner_data,(com_port,communication_class))
+    else:
+        print(c.ERROR+"Communication class: Aborting scanner_communication_buffor()"+c.ENDC)
 
             
 
