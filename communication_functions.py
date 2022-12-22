@@ -1,8 +1,10 @@
 import serial.tools.list_ports
 import usb_config as config
+import machine_config
 import time
 import _thread
 from syntax import colors as c
+
 
 def STM32_communication_buffor(communication_class):
     #Estabilish connection
@@ -37,16 +39,31 @@ def STM32_communication_buffor(communication_class):
             communication_class.TURN_ON_CONVEYOR_BELT_BACKWARD = False
             print(c.OK_BLUE+"Communication class: Sending STM32 command to turn on conveyor belt backward"+c.ENDC)
             serial_port.write(b"B\n")
-            
-        elif communication_class.TURN_OFF_CONVEYOR_BELT:
-            communication_class.TURN_OFF_CONVEYOR_BELT = False
-            print(c.OK_BLUE+"Communication class: Sending STM32 command to turn off conveyor belt"+c.ENDC)
+
+        elif communication_class.TURN_ON_GREEN_LED:
+            communication_class.TURN_ON_GREEN_LED = False
+            print(c.OK_BLUE+"Communication class: Sending STM32 command to turn on green LED"+c.ENDC)
             serial_port.write(b"C\n")
-        
+
+        elif communication_class.TURN_ON_RED_LED:
+            communication_class.TURN_ON_RED_LED = False
+            print(c.OK_BLUE+"Communication class: Sending STM32 command to turn on red LED"+c.ENDC)
+            serial_port.write(b"D\n")    
+
         elif communication_class.GET_WEIGHT:
             communication_class.GET_WEIGHT = False
             print(c.OK_BLUE+"Communication class: Sending STM32 command to get weight"+c.ENDC)
             serial_port.write(b"E\n")
+
+        elif communication_class.TURN_OFF_CONVEYOR_BELT:
+            communication_class.TURN_OFF_CONVEYOR_BELT = False
+            print(c.OK_BLUE+"Communication class: Sending STM32 command to turn off conveyor belt"+c.ENDC)
+            serial_port.write(b"H\n")
+
+        elif communication_class.TURN_ON_BLINKING_RED_LED:
+            communication_class.TURN_ON_BLINKING_RED_LED = False
+            print(c.OK_BLUE+"Communication class: Sending STM32 command to turn on blinking red LED"+c.ENDC)
+            serial_port.write(b"I\n")
 
         if serial_port.in_waiting > 0:
             command = serial_port.read(9).decode("utf-8")
@@ -74,8 +91,12 @@ def STM32_communication_buffor(communication_class):
                         continue
                     else:
                         value += character
-                communication_class.WEIGHT_VALUE = int(value)
-                print(c.OK_MAGENTA+"Communication class: Weight value received from STM32: "+value+c.ENDC)
+
+
+                value = int(value) - machine_config.TARE_SCALE_VALUE
+                value = value / machine_config.SCALE_MULTIPLIER
+                communication_class.WEIGHT_VALUE = round(value,2)
+                print(c.OK_MAGENTA+"Communication class: Weight value received from STM32: "+str(value)+c.ENDC)
                 
                 
                 continue

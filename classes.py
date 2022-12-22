@@ -13,9 +13,9 @@ class machine():
         
         
         #machine states
-        self.STATE_IDLE = True             #Machine right there is waiting for user to start the process by putting bottle in hole
-        self.STATE_ACTIVE_READY = False    #Machine is waiting for user to scan barcode of bottle or put out bottle from hole          
-        self.STATE_ACTIVE_RUNNING = False  #Machine is waiting for user to get out hand of and start the bottle crushing process
+        self.STATE_IDLE = True              #Machine right there is waiting for user to start the process by putting bottle in hole
+        self.STATE_ACTIVE_READY = False     #Machine is waiting for user to scan barcode of bottle or put out bottle from hole          
+        self.STATE_ACTIVE_RUNNING = False   #Machine is waiting for user to get out hand of and start the bottle crushing process
     
         self.STATE_SAFE_MODE = False        #Critical state
 
@@ -55,7 +55,10 @@ class communication():
         self.TURN_ON_CONVEYOR_BELT_FORWARD = False
         self.TURN_ON_CONVEYOR_BELT_BACKWARD = False
         self.TURN_OFF_CONVEYOR_BELT = False
-        
+        self.TURN_ON_RED_LED = False
+        self.TURN_ON_GREEN_LED = False
+        self.TURN_ON_BLINKING_RED_LED = False
+
         self.GET_WEIGHT = False
         
         
@@ -83,6 +86,12 @@ class communication():
         self.TURN_ON_CONVEYOR_BELT_BACKWARD = True
     def turn_off_conveyor_belt(self):
         self.TURN_OFF_CONVEYOR_BELT = True
+    def turn_on_green_led(self):
+        self.TURN_ON_GREEN_LED = True
+    def turn_on_red_led(self):
+        self.TURN_ON_RED_LED = True
+    def turn_blinking_red_led(self):
+        self.TURN_ON_BLINKING_RED_LED = True
     def get_weight(self):
         self.GET_WEIGHT = True
 
@@ -95,11 +104,11 @@ class synchronization():
         self.machine = machine_class
         self.communication = communication_class
 
-        if not sf.validate_machine_table():
+        if not sf.validate_bottles_table():
             self.machine.STATE_SAFE_MODE = True
 
 
-        _thread.start_new_thread(sf.synchronization_worker,(self,))
-        _thread.start_new_thread(sf.update_information_worker,(self,))
+        #_thread.start_new_thread(sf.synchronization_worker,(self,))
+        #_thread.start_new_thread(sf.update_information_worker,(self,))
 
         print(c.OK_GREEN+"Synchronization class: Initialized!"+c.ENDC)
