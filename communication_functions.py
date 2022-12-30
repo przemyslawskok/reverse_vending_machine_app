@@ -65,6 +65,16 @@ def STM32_communication_buffor(communication_class):
             print(c.OK_BLUE+"Communication class: Sending STM32 command to turn on blinking red LED"+c.ENDC)
             serial_port.write(b"I\n")
 
+        elif communication_class.TURN_ON_CAM_LED:
+            communication_class.TURN_ON_CAM_LED = False
+            print(c.OK_BLUE+"Communication class: Sending STM32 command to turn on CAM LED"+c.ENDC)
+            serial_port.write(b"J\n")
+
+        elif communication_class.TURN_OFF_CAM_LED:
+            communication_class.TURN_OFF_CAM_LED = False
+            print(c.OK_BLUE+"Communication class: Sending STM32 command to turn off CAM LED"+c.ENDC)
+            serial_port.write(b"K\n")
+
         if serial_port.in_waiting > 0:
             command = serial_port.read(9).decode("utf-8")
             

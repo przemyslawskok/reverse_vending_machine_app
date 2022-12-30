@@ -58,6 +58,9 @@ class communication():
         self.TURN_ON_RED_LED = False
         self.TURN_ON_GREEN_LED = False
         self.TURN_ON_BLINKING_RED_LED = False
+        self.TURN_ON_CAM_LED = False
+        self.TURN_OFF_CAM_LED = False
+
 
         self.GET_WEIGHT = False
         
