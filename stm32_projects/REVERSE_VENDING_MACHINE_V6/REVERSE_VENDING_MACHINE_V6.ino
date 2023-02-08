@@ -450,7 +450,7 @@ void check_photo_bottle_sensor_state()
 {
   if (INFORM_ABOUT_PHOTO_BOTTLE_SENSOR_STATE)
   {
-    if (PHOTO_BOTTLE_SENSOR_STATE)
+    if (PHOTO_BOTTLE_SENSOOR_STATE)
     {
       INFORM_ABOUT_PHOTO_BOTTLE_SENSOR_STATE = false;   
       Serial.print("g1g******");         

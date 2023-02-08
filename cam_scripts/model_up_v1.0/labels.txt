@@ -1,0 +1,5 @@
+0 plastic
+1 metal
+2 glass
+3 something
+4 empty

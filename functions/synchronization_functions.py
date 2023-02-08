@@ -1,5 +1,5 @@
 import sqlite3
-from syntax import colors as c
+from functions.syntax import colors as c
 import time
 
 
@@ -31,10 +31,12 @@ def validate_bottles_table():
         BARCODE TEXT,
         NAME TEXT,
         MATERIAL TEXT,
-        WEIGHT INTEGER)""")
+        WEIGHT INTEGER,
+        SIZE TEXT,
+        LENGTH INTEGER)""")
         conn.commit()
         conn.close()
-
+        
         # except:
         #     print(c.ERROR + "Synchronization class: Failed to create table 'BOTTLES'! Aborting validate_bottles_table()" + c.ENDC)
         #     return False

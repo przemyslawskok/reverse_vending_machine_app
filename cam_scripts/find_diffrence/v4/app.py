@@ -79,12 +79,12 @@ while True:
         diff = ImageChops.difference(background, live_image)
         diff.save('diff.jpg')
         diff = cv2.imread('diff.jpg')
-        #cv2.imshow('diffrence before gray', diff)
+        cv2.imshow('diffrence before gray', diff)
         diff_gray = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
-        #cv2.imshow('diffrence after gray', diff_gray)
+        cv2.imshow('diffrence after gray', diff_gray)
         #treshhold
         ret, diff_gray = cv2.threshold(diff_gray, 40, 255, cv2.THRESH_BINARY)
-        #cv2.imshow('diffrence after treshhold', diff_gray)
+        cv2.imshow('diffrence after treshhold', diff_gray)
 
         #find contours
         contours, hierarchy = cv2.findContours(diff_gray, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -105,6 +105,10 @@ while True:
                 biggest_box = box
                 #draw X and Y point 
                 
+
+        #draw box
+        cv2.rectangle(image_back, (biggest_box[0], biggest_box[1]), (biggest_box[0] + biggest_box[2], biggest_box[1] + biggest_box[3]), (0, 255, 0), 2)
+    
         
         middle_point = biggest_box[0]+(biggest_box[2]/2)
         middle_point = int(middle_point)

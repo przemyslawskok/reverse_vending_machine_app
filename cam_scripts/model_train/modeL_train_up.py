@@ -24,7 +24,7 @@ while True:
 
 
     #resize image 2x smaller
-    image_cutted = cv2.resize(image_cutted, (0,0), fx=0.5, fy=0.5)
+    image_cutted = cv2.resize(image_cutted, (224, 224),interpolation=cv2.INTER_AREA)
     #cv2.imshow('Resized', image_cutted)
     #if keyboard input is 's' save image to file
     #keyboard input e
@@ -52,26 +52,26 @@ while True:
 
     if record_empty:
         
-        cv2.imwrite('images/empty/'+str(image_counter)+'.jpg', image_cutted)
+        cv2.imwrite('images_up/empty/'+str(image_counter)+'.jpg', image_cutted)
         print('Image saved empty')
         
     if record_plastic:
-        cv2.imwrite('images/plastic/'+str(image_counter)+'.jpg', image_cutted)
+        cv2.imwrite('images_up/plastic/'+str(image_counter)+'.jpg', image_cutted)
 
         print('Image saved plastic')
 
 
     if record_something:
         
-        cv2.imwrite('images/something/'+str(image_counter)+'.jpg', image_cutted)
+        cv2.imwrite('images_up/something/'+str(image_counter)+'.jpg', image_cutted)
         print('Image saved something')
        
     if record_metal:
-        cv2.imwrite('images/metal/'+str(image_counter)+'.jpg', image_cutted)
+        cv2.imwrite('images_up/metal/'+str(image_counter)+'.jpg', image_cutted)
         print('Image saved metal')
 
     if record_glass:
-        cv2.imwrite('images/glass/'+str(image_counter)+'.jpg', image_cutted)
+        cv2.imwrite('images_up/glass/'+str(image_counter)+'.jpg', image_cutted)
         print('Image saved glass')
 
 

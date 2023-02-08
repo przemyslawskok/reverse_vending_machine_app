@@ -1,10 +1,10 @@
 import serial.tools.list_ports
-import usb_config as config
-from syntax import colors as c
+import functions.usb_config as config
+from functions.syntax import colors as c
 import _thread
 import time
 import sqlite3
-import machine_config
+import functions.machine_config as machine_config
 
 
 class empty_bottle:
@@ -14,6 +14,8 @@ class empty_bottle:
         self.weight = None
         self.material = None
         self.name = None
+        self.size = None
+        self.length = None
 
 bottle = empty_bottle()
 
@@ -73,7 +75,7 @@ while True:
     #print("waiting for scan barcode..")
     if bottle.scanned:
         #wait for input x to get weitght
-        inp = input("Enter W to get weight")
+        inp = input("Enter W to get weight or number of g")
         if inp == "W":
             #connect with scale
             com_port=check_com_port(config.USB_VID_PID["STM32"]["VID"],config.USB_VID_PID["STM32"]["PID"])
@@ -104,7 +106,8 @@ while True:
                     #round it to 2 decimal places
                     bottle.weight = round(value,2)
                     #print(c.OK_MAGENTA+"Communication class: Weight value received from STM32: "+value+c.ENDC)
-            
+        else:
+            bottle.weight = round(float(inp),2)
         inp = input (" P - Plastic , M - Metal , G - Glass ")
         if inp == "P":
             bottle.material = "Plastic"
@@ -114,14 +117,22 @@ while True:
             bottle.material = "Glass"
         inp = input ("Enter name of bottle")
         bottle.name = inp
+
+        inp = input ("Enter size of bottle [s,b]")
+        if inp == "s":
+            bottle.size = "small_bottle"
+        elif inp == "b":
+            bottle.size = "big_bottle"
+        inp = input ("Enter length of bottle [cm]")
+        bottle.length = round(float(inp),2)
+
         print(bottle.name)
         print(bottle.material)
         print(bottle.weight)
         print(bottle.barcode)
-
-
+        print(bottle.size)
+        print(bottle.length)
         #Insert into database
-
         try:
             conn = sqlite3.connect('database.db')
             cursor = conn.cursor()
@@ -137,12 +148,14 @@ while True:
             BARCODE TEXT,
             NAME TEXT,
             MATERIAL TEXT,
-            WEIGHT INTEGER)""")
+            WEIGHT INTEGER,
+            SIZE TEXT,
+            LENGTH INTEGER)""")
             conn.commit()
             conn.close()
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-        c.execute("INSERT INTO BOTTLES (BARCODE, NAME, MATERIAL, WEIGHT) VALUES (?,?,?,?)",(bottle.barcode,bottle.name,bottle.material,bottle.weight))
+        c.execute("INSERT INTO BOTTLES (BARCODE, NAME, MATERIAL, WEIGHT, SIZE, LENGTH) VALUES (?,?,?,?,?,?)",(bottle.barcode,bottle.name,bottle.material,bottle.weight,bottle.size,bottle.length))
         conn.commit()
         conn.close()
 

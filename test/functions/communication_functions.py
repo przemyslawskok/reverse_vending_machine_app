@@ -1,9 +1,9 @@
 import serial.tools.list_ports
-import usb_config as config
-import machine_config
+import functions.usb_config as config
+import functions.machine_config as machine_config
 import time
 import _thread
-from syntax import colors as c
+from functions.syntax import colors as c
 
 
 def STM32_communication_buffor(communication_class):

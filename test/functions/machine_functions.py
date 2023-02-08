@@ -1,4 +1,7 @@
-from syntax import colors as c
+from functions.syntax import colors as c
+
+def load_models(machine_class):
+    try:
 
 def compare_bottle_weight(bottle_info, communication_class):
     #check if diffrence is less than 10%
@@ -8,3 +11,4 @@ def compare_bottle_weight(bottle_info, communication_class):
     else:
         print(c.ERROR+"Communication class: Measured weight: "+ str(communication_class.WEIGHT_VALUE) +"g. | DB weight: " + str(bottle_info[4]) + "g." + c.ENDC)
         return False
+
